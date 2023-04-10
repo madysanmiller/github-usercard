@@ -1,3 +1,4 @@
+import axios from 'axios';
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
@@ -28,7 +29,11 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ["aingram84", "evoingram", "bigknell", "justsml", "luishrd", "tetondan"];
+
+for (let i = 0; i < followersArray.length; i++) {
+  gitCard(followersArray[i]);
+}
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +54,61 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function gitCard(ghUserName) {
+  const url = `https://api.github.com/users/${ghUserName}`;
+  axios.get(url).then(response => {
+    document.querySelector(".cards").appendChild(githubUserCard(response.data))
+
+  })
+    .catch(error => {
+      console.error(error);
+    })
+    .finally(() => console.log("Test"));
+}
+
+function githubUserCard(gitObject) {
+  const cardWrapper = document.createElement("div");
+  const image = document.createElement("img");
+  const cardInfo = document.createElement("div");
+  const name = document.createElement("h3");
+  const userName = document.createElement("p");
+  const location = document.createElement("p");
+  const profile = document.createElement("p");
+  const address = document.createElement("a");
+  const followers = document.createElement("p");
+  const following = document.createElement("p");
+  const bio = document.createElement("p");
+
+  name.classList.add("name");
+  userName.classList.add("username");
+  cardInfo.classList.add("card-info");
+  cardWrapper.classList.add("card");
+
+  image.src = gitObject.avatar_url;
+  name.textContent = gitObject.name;
+  userName.textContent = gitObject.login;
+  location.textContent = gitObject.location;
+  profile.textContent = gitObject.blog;
+  address.textContent = gitObject.html_url;
+  address.href = gitObject.html_url;
+  followers.textContent = `Followers: ${gitObject.followers}`;
+  following.textContent = `Following: ${gitObject.following}`;
+  bio.textContent = `Bio: ${gitObject.bio}`;
+
+  cardWrapper.appendChild(image);
+  cardWrapper.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(userName);
+  cardInfo.appendChild(address);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+
+  return cardWrapper;
+}
 
 /*
   List of LS Instructors Github username's:
